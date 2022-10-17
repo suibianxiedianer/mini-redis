@@ -239,7 +239,7 @@ fn peek_u8(src: &mut Cursor<&[u8]>) -> Result<u8, Error> {
     Ok(src.chunk()[0])
 }
 
-// 将游标后移 n 个 bytes
+// 将数据前移 n 个 byte，类似于删除，整体左移？
 fn skip(src: &mut Cursor<&[u8]>, n: usize) -> Result<(), Error> {
     if src.remaining() < n {
         return Err(Error::Incomplete)

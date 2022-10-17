@@ -1,6 +1,9 @@
 pub mod frame;
 pub use frame::Frame;
 
+pub mod connection;
+pub use connection::Connection;
+
 /// 定义 crate::Error
 /// 大部分函数返回的错误
 pub type Error = Box<dyn std::error::Error + Send + Sync>;
