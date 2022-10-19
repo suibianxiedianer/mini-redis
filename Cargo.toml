@@ -17,3 +17,4 @@ path = "src/bin/cli.rs"
 atoi = "2"
 bytes = "1"
 tokio = { version = "1", features =  ["full"] }
+tracing = "0.1"
