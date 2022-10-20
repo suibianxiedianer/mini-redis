@@ -76,7 +76,7 @@ impl Connection {
     }
 
     /// 将 frame 写入 stream
-    pub async fn write_frame(&mut self, frame: Frame) -> io::Result<()> {
+    pub async fn write_frame(&mut self, frame: &Frame) -> io::Result<()> {
         match frame {
             // Array(Vec<Frame>):
             // b'*' + bytes(len) + '\r\n' + bytes(frames)
@@ -88,7 +88,7 @@ impl Connection {
                     self.write_value(&entry).await?;
                 }
             },
-            _ => self.write_value(&frame).await?,
+            _ => self.write_value(frame).await?,
         }
 
         Ok(())

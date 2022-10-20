@@ -41,7 +41,7 @@ impl Get {
 
         debug!(?response);
 
-        dst.write_frame(response).await?;
+        dst.write_frame(&response).await?;
 
         Ok(())
     }

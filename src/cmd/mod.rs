@@ -5,7 +5,11 @@
 mod get;
 pub use get::Get;
 
+mod set;
+pub use set::Set;
+
 #[derive(Debug)]
 pub enum Command {
     Get(Get),
+    Set(Set),
 }
