@@ -11,9 +11,13 @@ pub use set::Set;
 mod publish;
 pub use publish::Publish;
 
+mod subscribe;
+use subscribe::Subscribe;
+
 #[derive(Debug)]
 pub enum Command {
     Get(Get),
     Set(Set),
     Publish(Publish),
+    Subscribe(Subscribe),
 }

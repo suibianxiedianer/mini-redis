@@ -11,6 +11,7 @@ mod db;
 use db::{Db, DbDropGuard};
 
 mod shutdown;
+use shutdown::Shutdown;
 
 mod cmd;
 
