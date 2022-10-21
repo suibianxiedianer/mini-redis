@@ -13,7 +13,8 @@ use db::{Db, DbDropGuard};
 mod shutdown;
 use shutdown::Shutdown;
 
-mod cmd;
+pub mod cmd;
+pub use cmd::Command;
 
 /// 定义 crate::Error
 /// 大部分函数返回的错误
