@@ -23,6 +23,7 @@ impl Ping {
         }
     }
 
+    #[instrument(skip(self, dst))]
     pub(crate) async fn apply(self, dst: &mut Connection) -> crate::Result<()> {
         let response = match self.msg {
             Some(msg) => Frame::Bulk(Bytes::from(msg)),

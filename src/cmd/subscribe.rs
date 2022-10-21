@@ -89,8 +89,6 @@ impl Subscribe {
                 }
             }
         }
-
-        Ok(())
     }
 
     /// 客户端发送请求前转换为 `Frame`，与 parse_frames 对应
