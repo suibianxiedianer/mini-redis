@@ -14,7 +14,7 @@ mod publish;
 pub use publish::Publish;
 
 mod subscribe;
-use subscribe::{Subscribe, Unsubscribe};
+pub use subscribe::{Subscribe, Unsubscribe};
 
 mod ping;
 pub use ping::Ping;
