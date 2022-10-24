@@ -16,6 +16,8 @@ use shutdown::Shutdown;
 pub mod cmd;
 pub use cmd::Command;
 
+pub mod server;
+
 /// 定义 crate::Error
 /// 大部分函数返回的错误
 pub type Error = Box<dyn std::error::Error + Send + Sync>;
