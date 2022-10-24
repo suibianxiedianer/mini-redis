@@ -68,7 +68,7 @@ impl DbDropGuard {
     }
 
     /// 获取共享数据库，因为这是一个 `Arc`，所以直接 clone 即可
-    pub(crate) fn db(self) -> Db {
+    pub(crate) fn db(&self) -> Db {
         self.db.clone()
     }
 }
