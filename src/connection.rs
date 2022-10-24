@@ -43,7 +43,7 @@ impl Connection {
                 if self.buffer.is_empty() {
                     return Ok(None)
                 } else {
-                    return Err("Connection reset by perr".into())
+                    return Err("Connection reset by peer".into())
                 }
             }
         }
