@@ -297,13 +297,59 @@ impl Subscriber {
         }
     }
 
+    /// 添加新的订阅列表
     #[instrument(skip(self))]
-    pub async fn subscribe(&mut self, channels: Vec<String>) -> crate::Result<()> {
-        unimplemented!()
+    pub async fn subscribe(&mut self, channels: &[String]) -> crate::Result<()> {
+        // 执行订阅
+        self.client.subscribe_cmd(channels).await?;
+
+        // 将新的频道列表添加到 subscribed_channels 中
+        self.subscribed_channels
+            .extend(channels.iter().map(Clone::clone));
+
+        Ok(())
     }
 
+    /// 取消对某些频道的订阅
     #[instrument(skip(self))]
     pub async fn unsubscribe(&mut self, channels: &[String]) -> crate::Result<()> {
-        unimplemented!()
+        let frame = Unsubscribe::new(channels).into_frame();
+        debug!(request = ? frame);
+
+        self.client.connection.write_frame(&frame).await?;
+
+        // 若不指定取消订阅的频道则取消所有订阅
+        let len = if channels.is_empty() {
+            self.subscribed_channels.len()
+        } else {
+            channels.len()
+        };
+
+        for _ in 0..len {
+            // 服务端会在每个取消订阅处理成功后发送消息
+            // 格式为 ["unsubscribe", channel, sub_nums]
+            match self.client.read_response().await? {
+                Frame::Array(frame) => match frame.as_slice() {
+                    [unsubscribe, channel, ..] if *unsubscribe == "unsubscribe" => {
+                        let len = self.subscribed_channels.len();
+                        if len == 0 {
+                            return Err(Frame::Array(frame).to_error())
+                        }
+
+                        // 删除 subscribed_channels 中的 channel
+                        self.subscribed_channels.retain(|c| *channel != &c[..]);
+
+                        // 验证删除成功
+                        if self.subscribed_channels.len() != len - 1 {
+                            return Err(Frame::Array(frame).to_error())
+                        }
+                    },
+                    _ => return Err(Frame::Array(frame).to_error()),
+                },
+                frame => return Err(frame.to_error()),
+            }
+        }
+
+        Ok(())
     }
 }
