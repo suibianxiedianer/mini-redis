@@ -73,7 +73,12 @@ pub async fn run(listener: TcpListener, shutdown: impl Future) {
     };
 
     tokio::select! {
-        res = server.run() => {},
+        res = server.run() => {
+            // 若服务异常退出，这里抓一下日志
+            if let Err(err) = res {
+                error!(cause = %err, "failed to accept");
+            }
+        },
         _ = shutdown => {},
     }
 
