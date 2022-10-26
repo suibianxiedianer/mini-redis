@@ -181,7 +181,8 @@ impl fmt::Display for Frame {
             },
             Frame::Array(arr) => {
                 for (i, item) in arr.iter().enumerate() {
-                    // TODO: 不明白为什么
+                    // arr 的构成为 [元素个数，元素1，元素2, ..]
+                    // 此处我们不想打印出元素个数
                     if i > 0 {
                         write!(fmt, " ")?;
                         item.fmt(fmt)?;

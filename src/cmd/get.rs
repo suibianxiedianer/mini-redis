@@ -21,8 +21,7 @@ impl Get {
         &self.key
     }
 
-    /// 何时，为什么
-    /// TODO
+    /// 在一个命令格式的 `Frame::Array` 中，读到 `get` ，再调用此生成 `Get` 命令
     pub(crate) fn parse_frames(parse: &mut Parse) -> crate::Result<Get> {
         let key = parse.next_string()?;
 
@@ -30,7 +29,6 @@ impl Get {
     }
 
     /// 从数据库中查找结果，并写入客户端的连接
-    /// TODO: 下面 instrument 意义何在
     #[instrument(skip(self, db, dst))]
     pub(crate) async fn apply(self, db: &Db, dst: &mut Connection) -> crate::Result<()> {
         let response = if let Some(value) = db.get(&self.key) {

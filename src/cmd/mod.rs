@@ -45,8 +45,8 @@ impl Command {
             "set" => Command::Set(Set::parse_frames(&mut parse)?),
             "publish" => Command::Publish(Publish::parse_frames(&mut parse)?),
             "subscribe" => Command::Subscribe(Subscribe::parse_frames(&mut parse)?),
-            "unsubscribe" => unimplemented!(),
-            "ping" => unimplemented!(),
+            "unsubscribe" => Command::Unsubscribe(Unsubscribe::parse_frames(&mut parse)?),
+            "ping" => Command::Ping(Ping::parse_frames(&mut parse)?),
             _ => unimplemented!(),
         };
 

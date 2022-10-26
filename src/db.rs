@@ -11,15 +11,15 @@ use tokio::{
 };
 use tracing::debug;
 
-/// 不太明白 DbDropGuard 干什么用的
-/// TODO
+/// 关闭服务的时候 drop `DbDropGuard`。其会通知所有持有 db 的连接关闭
 #[derive(Debug)]
 pub(crate) struct DbDropGuard {
     db: Db,
 }
 
 /// Db 拥有 `Arc` Shared，在所有连接之间共享
-/// TODO
+///
+/// 每个连接程序会共享地持有此 db 句柄
 #[derive(Debug, Clone)]
 pub(crate) struct Db {
     shared: Arc<Shared>,
@@ -28,13 +28,15 @@ pub(crate) struct Db {
 /// Shared
 /// state 加锁，读写数据
 /// background_task 用来做什么
-/// TODO
+/// background_task 用来自我通知，在过期数据清理任务中，若有新的、更早过期的数据，则会通过
+/// background_task.notify_one() 来发送消息，而在 purge_expired_tasks 中的 background_task
+/// 会收到消息，重新开始新的倒计时
 #[derive(Debug)]
 struct Shared {
     /// 共享的 state 被 mutex 保护，
     /// 因其内部操作都是同步的故使用 `std::sync::Mutex` 而非 `Tokio` mutex
     state: Mutex<State>,
-    /// TODO
+    /// 用来发送通知，清理过期数据
     background_task: Notify,
 }
 
@@ -186,7 +188,7 @@ impl Db {
             .unwrap_or(0)
     }
 
-    /// TODO
+    /// 改变 shutdown 标志位后通知清理任务，其在一个 while 循环中会退出
     fn shutdown_purge_task(&self) {
         let mut state = self.shared.state.lock().unwrap();
         state.shutdown = true;
@@ -196,7 +198,6 @@ impl Db {
     }
 }
 
-/// TODO
 impl Shared {
     /// 清除所有的已过期的键，并返回最近的将过期的时间
     /// 后台任务将休眠到过期时间再执行清理任务
@@ -249,7 +250,6 @@ async fn purge_expired_tasks(shared: Arc<Shared>) {
                 // 当在等待时得到通知，则更新最早生效的键的时间
                 _ = shared.background_task.notified() => {},
             }
-            todo!()
         } else {
             // 没有将生效的键，等待通知
             shared.background_task.notified().await;

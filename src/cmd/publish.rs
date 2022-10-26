@@ -17,7 +17,7 @@ impl Publish {
         }
     }
 
-    /// TODO
+    /// 服务收到命令的 `Frame::Array` ，确认何种命令后调此生成对应的命令
     pub(crate) fn parse_frames(parse: &mut Parse) -> crate::Result<Publish> {
         let channel = parse.next_string()?;
         let message = parse.next_bytes()?;

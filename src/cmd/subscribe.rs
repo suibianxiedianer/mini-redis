@@ -28,7 +28,7 @@ pub struct Unsubscribe {
 }
 
 /// 消息流
-/// TODO
+/// `Messages` 是一个使用智能指针包装的且被固定的，以 `Bytes` 为产出的流
 type Messages = Pin<Box<dyn Stream<Item = Bytes> + Send>>;
 
 impl Subscribe {

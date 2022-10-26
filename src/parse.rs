@@ -6,14 +6,12 @@ use crate::Frame;
 use bytes::Bytes;
 
 /// 一个用来处理 Frame::Array 的小工具？
-/// 暂时不太明白它到底用在什么场景
-/// TODO
+/// 主要提供了几个 next 方法，方便起见
 #[derive(Debug)]
 pub(crate) struct Parse {
     parts: vec::IntoIter<Frame>,
 }
 
-/// TODO
 #[derive(Debug)]
 pub(crate) enum ParseError {
     EndOfStream,
