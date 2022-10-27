@@ -91,7 +91,7 @@ impl Connection {
             _ => self.write_value(frame).await?,
         }
 
-        Ok(())
+        self.stream.flush().await
     }
 
     pub async fn write_value(&mut self, frame: &Frame) -> io::Result<()> {
@@ -114,7 +114,7 @@ impl Connection {
                 self.stream.write_all(b"-1\r\n").await?;
             }
             Frame::Bulk(val) => {
-                self.stream.write_u8(b'*').await?;
+                self.stream.write_u8(b'$').await?;
                 self.write_decimal(val.len() as u64).await?;
                 self.stream.write_all(val).await?;
                 self.stream.write_all(b"\r\n").await?;

@@ -197,7 +197,7 @@ impl fmt::Display for Frame {
 
 // 读取第一个 byte 且将游标后移
 fn get_u8(src: &mut Cursor<&[u8]>) -> Result<u8, Error> {
-    if src.has_remaining() {
+    if !src.has_remaining() {
         return Err(Error::Incomplete)
     }
 
