@@ -156,11 +156,12 @@ impl Frame {
     }
 }
 
-// 字符串引用比对，仅支持 `Simple` 或 `Error` 类型
+// 字符串引用比对，仅支持 `Simple`、`Bulk`或 `Error` 类型
 impl PartialEq<&str> for Frame {
     fn eq(&self, other: &&str) -> bool {
         match self {
             Frame::Simple(s) | Frame::Error(s) => s.eq(other),
+            Frame::Bulk(s) => s.eq(other),
             _ => false,
         }
     }
