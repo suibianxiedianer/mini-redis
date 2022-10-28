@@ -8,9 +8,9 @@
 //! use mini_redis::blocking_client;
 //!
 //! fn main() {
-//!     let client = match blocking_client::connect("localhost:6379") {
+//!     let mut client = match blocking_client::connect("localhost:6379") {
 //!         Ok(client) => client,
-//!         err(_) => panic!("failed to establish connection"),
+//!         Err(_) => panic!("failed to establish connection"),
 //!     };
 //!
 //!     client.set("foo", "bar".into()).unwrap();
@@ -67,13 +67,14 @@ pub struct SubscriberIterator {
 /// ```no_run
 /// use mini_redis::blocking_client;
 ///
-/// fn main() {}
-///     let client = match blocking_client::connect("localhost:6379") {
+/// fn main() {
+///     let mut client = match blocking_client::connect("localhost:6379") {
 ///         Ok(client) => client,
 ///         Err(_) => panic!("failed to establish connection"),
 ///     };
 ///
 ///     drop(client);
+/// }
 /// ```
 pub fn connect<T: ToSocketAddrs>(addr: T) -> crate::Result<BlockingClient> {
     let rt = tokio::runtime::Builder::new_current_thread()

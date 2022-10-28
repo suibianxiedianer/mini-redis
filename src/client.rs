@@ -46,9 +46,9 @@ pub struct Message {
 ///     let client = match client::connect("localhost:6379").await {
 ///         Ok(client) => client,
 ///         Err(_) => panic!("failed to establish connection"),
-///     }
+///     };
 ///
-///     drop(client);
+/// #   drop(client);
 /// }
 /// ```
 pub async fn connect<T: ToSocketAddrs>(addr: T) -> crate::Result<Client> {
@@ -63,10 +63,16 @@ impl Client {
     /// 如果此键值对不存在则返回 `None`
     ///
     /// # 示例
+    ///
     /// ```no_run
+    /// use mini_redis::client;
+    ///
     /// #[tokio::main]
     /// async fn main() {
-    ///     let mut client = client::connect("localhost:6379").await?;
+    ///     let mut client = match client::connect("localhost:6379").await {
+    ///         Ok(client) => client,
+    ///         Err(_) => panic!("failed to establish connnect"),
+    ///     };
     ///
     ///     let val = client.get("foo").await.unwrap();
     ///     println!("Got foo = {:?}", val);
@@ -92,12 +98,16 @@ impl Client {
     /// 此键上的值可以被重写覆盖，若值被重写，则其有效期也将重置
     ///
     /// # 示例
+    ///
     /// ```no_run
     /// use mini_redis::client;
     ///
     /// #[tokio::main]
     /// async fn main() {
-    ///     let mut client = client::connect("localhost:6379").await?;
+    ///     let mut client = match client::connect("localhost:6379").await {
+    ///         Ok(client) => client,
+    ///         Err(_) => panic!("failed to establish connnect"),
+    ///     };
     ///
     ///     client.set("foo", "bar".into()).await.unwrap();
     ///
@@ -114,10 +124,17 @@ impl Client {
     /// 此键上的值可以被重写覆盖，若值被重写，则其有效期也将重置
     ///
     /// # 示例
+    ///
     /// ```no_run
+    /// use tokio::time::{self, Duration};
+    /// use mini_redis::client;
+    ///
     /// #[tokio::main]
     /// async fn main() {
-    ///     let mut client = client::connection("localhost:6379").await?;
+    ///     let mut client = match client::connect("localhost:6379").await {
+    ///         Ok(client) => client,
+    ///         Err(_) => panic!("failed to establish connnect"),
+    ///     };
     ///     let expiration = Duration::from_millis(500);
     ///
     ///     client.set_expires("foo", "bar".into(), expiration).await.unwrap();
@@ -127,7 +144,7 @@ impl Client {
     ///     assert_eq!(val, "bar");
     ///
     ///     // 过期啦
-    ///     time.sleep(expiration).await;
+    ///     time::sleep(expiration).await;
     ///     let val = client.get("foo").await.unwrap();
     ///     assert!(val.is_none());
     /// }
@@ -152,12 +169,16 @@ impl Client {
     /// 无法确保每个监听的接收者可以收到消息，因为连接可能随时断开
     ///
     /// # 示例
+    ///
     /// ```no_run
     /// use mini_redis::client;
     ///
     /// #[tokio::main]
     /// async fn main() {
-    ///     let mut client = client::connect("localhost:6379").await?;
+    ///     let mut client = match client::connect("localhost:6379").await {
+    ///         Ok(client) => client,
+    ///         Err(_) => panic!("failed to establish connnect"),
+    ///     };
     ///
     ///     let num = client.publish("foo", "bar".into()).await.unwrap();
     ///     println!("Got = {:?}", num);
@@ -217,12 +238,16 @@ impl Client {
     /// 未指定消息时返回 `PONG`，否则返回 `Ping` 相同的消息
     ///
     /// # 示例
-    /// ```
+    ///
+    /// ```no_run
     /// use mini_redis::client;
     ///
     /// #[tokio::main]
     /// async fn main() {
-    ///     let mut client = client::connect("localhost:6379").await.unwrap();
+    ///     let mut client = match client::connect("localhost:6379").await {
+    ///         Ok(client) => client,
+    ///         Err(_) => panic!("failed to establish connnect"),
+    ///     };
     ///
     ///     let pong = client.ping(None).await.unwrap();
     ///     assert_eq!(b"PONG", &pong[..]);
