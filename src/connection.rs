@@ -111,7 +111,7 @@ impl Connection {
                 self.write_decimal(*val).await?;
             },
             Frame::Null => {
-                self.stream.write_all(b"-1\r\n").await?;
+                self.stream.write_all(b"$-1\r\n").await?;
             }
             Frame::Bulk(val) => {
                 self.stream.write_u8(b'$').await?;
