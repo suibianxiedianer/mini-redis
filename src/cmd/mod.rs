@@ -47,7 +47,7 @@ impl Command {
             "subscribe" => Command::Subscribe(Subscribe::parse_frames(&mut parse)?),
             "unsubscribe" => Command::Unsubscribe(Unsubscribe::parse_frames(&mut parse)?),
             "ping" => Command::Ping(Ping::parse_frames(&mut parse)?),
-            _ => unimplemented!(),
+            _ => return Ok(Command::Unknown(Unknown::new(command))),
         };
 
         // 不应该有尚未读出的数据
