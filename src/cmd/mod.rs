@@ -82,7 +82,7 @@ impl Command {
             Set(cmd) => cmd.apply(db, dst).await,
             Publish(cmd) => cmd.apply(db, dst).await,
             Subscribe(cmd) => cmd.apply(db, dst, shutdown).await,
-            Ping(cmd) => unimplemented!(),
+            Ping(cmd) => cmd.apply(dst).await,
             Unknown(cmd) => cmd.apply(dst).await,
             Unsubscribe(cmd) => Err("Unsubscribe is not support in this context".into()),
         }
