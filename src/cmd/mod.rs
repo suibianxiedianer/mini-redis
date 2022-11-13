@@ -47,7 +47,7 @@ impl Command {
             "subscribe" => Command::Subscribe(Subscribe::parse_frames(&mut parse)?),
             "unsubscribe" => Command::Unsubscribe(Unsubscribe::parse_frames(&mut parse)?),
             "ping" => Command::Ping(Ping::parse_frames(&mut parse)?),
-            _ => unimplemented!(),
+            _ => return Ok(Command::Unknown(Unknown::new(command))),
         };
 
         // 不应该有尚未读出的数据
@@ -82,7 +82,7 @@ impl Command {
             Set(cmd) => cmd.apply(db, dst).await,
             Publish(cmd) => cmd.apply(db, dst).await,
             Subscribe(cmd) => cmd.apply(db, dst, shutdown).await,
-            Ping(cmd) => unimplemented!(),
+            Ping(cmd) => cmd.apply(dst).await,
             Unknown(cmd) => cmd.apply(dst).await,
             Unsubscribe(cmd) => Err("Unsubscribe is not support in this context".into()),
         }
